@@ -29,7 +29,7 @@ code {
 	font-weight: bold;
 }
 
-.pageHeading {
+.page-heading {
 	margin: 0 0 0.5rem;
 	font-size: 25px;
 	font-weight: bold;
@@ -43,7 +43,7 @@ code {
 	font-weight: bold;
 }
 
-.buttonsContainer {
+.buttons-container {
 	margin-top: 1.5rem;
 	display: flex;
 	justify-content: center;
@@ -70,11 +70,11 @@ code {
 	background-color: var(--disabled-color);
 }
 
-.listContainer {
+.list-container {
 	margin-top: 1.5rem;
 }
 
-.listHeading {
+.list-heading {
 	font-size: 20px;
 	font-weight: bold;
 	margin: 0 0 0.5rem;
