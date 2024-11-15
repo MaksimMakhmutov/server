@@ -1,76 +1,71 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './app.module.css';
+import data from './data.json';
 
-export function App() {
-	const [value, setValue] = useState('');
-	const [list, setList] = useState([]);
-	const [error, setError] = useState('');
+export const App = () => {
+	const [steps] = useState(data);
+	const [activeIndex, setActiveIndex] = useState(0);
 
-	// Функция для запроса значения через prompt
-	const onInputButtonClick = () => {
-		const promptValue = prompt('Введите значение');
-		console.log(promptValue);
-
-		// Валидация и установка состояния
-		if (promptValue) {
-			if (promptValue.length >= 3) {
-				setValue(promptValue);
-				setError('');
-			} else {
-				setError('Значение должно содержать минимум 3 символа.');
-			}
-		}
+	const handeClickBack = () => {
+		setActiveIndex((prevData) => prevData - 1);
 	};
 
-	// Проверка на валидность значения
-	const isValueValid = value.length >= 3;
-
-	// Добавление значения в список
-	const onAddButtonClick = () => {
-		if (isValueValid) {
-			const newItem = { id: Date.now(), value };
-			setList((list) => [...list, newItem]);
-			setValue('');
-			setError('');
-		}
+	const handleClickNext = () => {
+		setActiveIndex((prevData) => prevData + 1);
 	};
+
+	const startOver = () => {
+		setActiveIndex(0);
+	};
+
+	const isFirstStep = activeIndex === 0;
+	const isLastStep = activeIndex === steps.length - 1;
+
+	const stepsItems = steps.map((step, index) => (
+		<li
+			key={step.id}
+			className={`${styles['steps-item']} ${index < activeIndex ? styles.done : ''} ${index === activeIndex ? styles.active : ''}`}
+		>
+			<button
+				className={styles['steps-item-button']}
+				onClick={() => setActiveIndex(index)}
+			>
+				{step.id.replace(/^0+/, '')}
+			</button>
+			{step.title}
+		</li>
+	));
 
 	return (
-		<div className={styles.app}>
-			<h1 className={styles.pageHeading}>Ввод значения</h1>
-
-			{/* Вывод текущего значения */}
-			<p className={styles.noMarginText}>{`Текущее значение value: "${value}"`}</p>
-			<div className={styles.buttonsContainer}>
-				{/* Кнопка для ввода нового значения */}
-				<button onClick={onInputButtonClick} className={styles.button}>
-					Ввести новое
-				</button>
-
-				{/* Кнопка для добавления в список */}
-				<button
-					onClick={onAddButtonClick}
-					disabled={!isValueValid}
-					className={styles.button}
-				>
-					Добавить в список
-				</button>
-			</div>
-
-			{/* Условный рендеринг ошибки */}
-			{error && <div className={styles.error}>{error}</div>}
-
-			{/* Список значений */}
-			<div className={styles.listContainer}>
-				<h2 className={styles.listHeading}>Список:</h2>
-				<ul>
-					{list.length > 0 ? (
-						list.map((item) => <li key={item.id}>{item.value}</li>)
-					) : (
-						<p>Нет добавленных элементов.</p>
-					)}
-				</ul>
+		<div className={styles.container}>
+			<div className={styles.card}>
+				<h1>Инструкция по готовке пельменей</h1>
+				<div className={styles.steps}>
+					<div className={styles['steps-content']}>
+						{steps[activeIndex].content}
+					</div>
+					<ul className={styles['steps-list']}>{stepsItems}</ul>
+					<div className={styles['buttons-container']}>
+						<button
+							className={styles.button}
+							onClick={handeClickBack}
+							disabled={isFirstStep}
+						>
+							Назад
+						</button>
+						<button
+							className={styles.button}
+							onClick={
+								activeIndex === steps.length - 1
+									? startOver
+									: handleClickNext
+							}
+						>
+							{isLastStep ? 'Начать с начала' : 'Далее'}
+						</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
-}
+};
