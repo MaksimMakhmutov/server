@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { InformationLayout } from './GameLayout/Information/Information';
 import { FieldLayout } from './GameLayout/Field/Field';
-import styels from './styels.game.css';
+import {} from './styels.game.css';
 export const App = () => {
 	const [field, setField] = useState(['', '', '', '', '', '', '', '', '']);
 	const [currentPlayer, setCurrentPlayer] = useState('X');

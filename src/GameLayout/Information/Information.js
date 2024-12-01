@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import styels from './styels.infomation.css'
+import {} from './styels.infomation.css'
 
 export const InformationLayout = ({ currentPlayer, isGameEnded, isDraw }) => {
 	return (

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import styels from './styels.board.css';
+import {} from './styels.board.css';
 
 export const FieldLayout = ({ field, onCellClick }) => (
 	<div className="field">
