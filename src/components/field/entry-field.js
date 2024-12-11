@@ -1,23 +1,19 @@
 import styles from './entry-field.module.css';
 
 export function EntryField({
-	nameField,
 	nameFieldLabel,
-	typeInputField,
+	nameField,
 	placeholderField,
-	fieldValue,
-	onFiledValueChange,
+	register,
 	errorField,
 }) {
 	return (
 		<>
 			<label className={styles.labelField}>{nameFieldLabel}</label>
 			<input
-				type={typeInputField}
 				name={nameField}
 				placeholder={placeholderField}
-				value={fieldValue}
-				onChange={onFiledValueChange}
+				{...register(nameField)}
 				className={styles.entryField}
 			/>
 			{errorField && <div className={styles.errorField}>{errorField}</div>}
