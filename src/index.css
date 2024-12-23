@@ -1,21 +1,6 @@
-:root {
-	--accent-color-hue: 236;
-	--accent-color-saturation: 100%;
-	--disabled-color: #cfcfcf;
-}
-
-body{
-	margin:0;
-	color:#d8dbed;
-	background:#ffffff;
-	font:600 16px/18px 'Open Sans',sans-serif;
-	user-select: none;
-  }
-  *,:after,:before{box-sizing:border-box}
-  .clearfix:after,.clearfix:before{content:'';display:table}
-  .clearfix:after{clear:both;display:block}
-  a{color:inherit;text-decoration:none}
-
-code {
-	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+body {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+	margin: 0;
+	padding: 0;
 }

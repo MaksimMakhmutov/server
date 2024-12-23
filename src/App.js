@@ -1,79 +1,33 @@
-import './App.css';
-import { EntryField } from './components/field/entry-field';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as Yup from 'yup';
-
-const validationSchema = Yup.object().shape({
-	email: Yup.string()
-		.required('Введите Email')
-		.min(5, 'Минимум 8 символа')
-		.max(32, 'Максимум 32 символа')
-		.email('Неверный формат электронной почты'),
-	password: Yup.string()
-		.required('Введите пароль')
-		.min(8, 'Минимум 8 символа')
-		.max(32, 'Максимум 32 символа')
-		.matches(/[а-я a-z]/, 'Пароль должен содержать хотя бы одну строчную букву')
-		.matches(/[А-Я A-Z]/, 'Пароль должен содержать хотя бы одну заглавную букву')
-		.matches(/\d/, 'Пароль должен содержать хотя бы одну цифру'),
-	repeatPassword: Yup.string()
-		.required('Повторите пароль')
-		.oneOf([Yup.ref('password'), null], 'Пароли не совпадают'),
-});
-
+import { useEffect, useState } from 'react';
+import s from './style.module.css';
 export function App() {
-	const {
-		register,
-		handleSubmit,
-		setFocus,
-		formState: { errors },
-	} = useForm({
-		defaultValues: {},
-		resolver: yupResolver(validationSchema),
-	});
-
-	const onSubmit = (data) => {
-		console.log(data);
-		setFocus('submitButton');
-	};
-
+	const [isLoading, setIsLoading] = useState(true);
+	const [todoLists, setTodoLists] = useState([]);
+	useEffect(() => {
+		document.body.classList.add('light');
+		fetch('https://jsonplaceholder.typicode.com/todos')
+			.then((response) => response.json())
+			.then((data) => {
+				setTodoLists(data);
+			})
+			.finally(() => setIsLoading(false));
+	}, []);
 	return (
-		<div className="App">
-			<div className="loginHtml">
-				<h2>New user registration page</h2>
-				<form onSubmit={handleSubmit(onSubmit)}>
-					<EntryField
-						nameFieldLabel="Email"
-						nameField="email"
-						placeholderField="Enter your Email"
-						register={register}
-						errorField={errors.email?.message}
-					/>
-					<EntryField
-						nameFieldLabel="Password"
-						nameField="password"
-						placeholderField="Enter the Password"
-						register={register}
-						errorField={errors.password?.message}
-					/>
-					<EntryField
-						nameFieldLabel="Repeat Password"
-						nameField="repeatPassword"
-						placeholderField="Repeat Password"
-						register={register}
-						errorField={errors.repeatPassword?.message}
-					/>
-					<button
-						id="submitButton"
-						type="submit"
-						className="button"
-						disabled={!register}
-					>
-						Register
-					</button>
-				</form>
+		<div className={s.container}>
+			<div className={s.header}>
+				<h1>Список дел</h1>
 			</div>
+			{isLoading ? (
+				<div className={s.loader}></div>
+			) : (
+				<div className={s.content}>
+					{todoLists.map((todo, index) => (
+						<div key={index} className={s.list}>
+							{todo.title}
+						</div>
+					))}
+				</div>
+			)}
 		</div>
 	);
 }
