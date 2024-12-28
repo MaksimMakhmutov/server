@@ -1,49 +1,106 @@
+
+body {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background-color: #f4f4f4;
+}
+
+
 .container {
-	display: flex;
-	place-content: center;
-	flex-direction: column;
-	padding: 2rem;
-	max-width: 1280px;
-	  margin: 0 auto;
-	  text-align: center;
-  }
-  .toggleTheme{
-	position: absolute;
-	top: 10px;
-	right: 10px;
-	cursor: pointer;
-	margin: 10px;
+	max-width: 600px; 
+	margin: 20px auto; 
+	padding: 20px;
+	background: white; 
+	border-radius: 8px; 
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); 
+}
+
+
+.header {
+	text-align: center; 
+	margin-bottom: 20px; 
+}
+
+
+.inp {
+	width: calc(100% - 20px); 
 	padding: 10px;
-	border-radius: 5px;
-	border: 1px solid #727272;
-	background-color: #fff;
-	transition: background-color 0.3s ease;
-  }
-  .header {
-	border-bottom: 1px solid #727272;
-  }
-  .content {
-	display: flex;
-	place-content: center;
-	flex-direction: column;
-	flex-wrap: wrap;
-	gap: 10px;
-	margin-top: 2rem;
-  }
-  .list {
-	border-radius: 5px;
-	box-shadow: 0 0 5px #727272;
-	padding: 10px;
-  }
-  .loader {
-	display: flex;
-	place-content: center;
-	margin: auto;
-	width: 25px;
-	height: 25px;
-	border: 5px solid #727272;
-	border-radius: 50%;
-	border-top-color: transparent;
-	animation: spin 1s infinite;
-	margin-top: 250px;
-  }
+	margin-bottom: 10px;
+	margin-top: 10px; 
+	border: 1px solid #ccc;
+	border-radius: 4px; 
+	font-size: 16px;
+}
+
+
+.btn {
+	padding: 10px 15px; 
+	background-color: #007bff; 
+	color: white;
+	border: none; 
+	border-radius: 4px; 
+	cursor: pointer; 
+	transition: background-color 0.3s; 
+}
+
+
+.btn:hover {
+	background-color: #0056b3; 
+}
+
+
+.loader {
+	border: 5px solid #f3f3f3; 
+	border-top: 5px solid #3498db; 
+	border-radius: 50%; 
+	width: 40px;
+	height: 40px;
+	animation: spin 1s linear infinite;
+	margin: auto; 
+}
+
+/* Loader Animation */
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+
+ul {
+	list-style-type: none; 
+	padding: 0; 
+}
+
+
+li {
+	display: flex; 
+	justify-content: space-between;
+	align-items: center; 
+	padding: 10px; 
+	border-bottom: 1px solid #eee;
+}
+
+
+@media (max-width: 600px) {
+	.inp {
+		width: 100%;
+	}
+
+	.btn {
+		width: 100%; 
+		margin-bottom: 10px; 
+	}
+
+	.container {
+		padding: 10px; 
+	}
+
+	.header h1 {
+		font-size: 24px; 
+	}
+}
