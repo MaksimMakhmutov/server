@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { db } from './firebase';
+import { ref, onValue, set, remove } from 'firebase/database';
 import s from './style.module.css';
 
 export const App = () => {
@@ -11,46 +12,38 @@ export const App = () => {
 
 	// Загрузка данных из JSON Server
 	useEffect(() => {
-		const fetchTodos = async () => {
-			try {
-				const response = await axios.get('http://localhost:3005/todos');
-				setTodos(response.data);
-			} catch (error) {
-				console.error('Ошибка при загрузке данных:', error);
-			} finally {
-				setIsLoading(false); // Устанавливаем isLoading в false после загрузки
-			}
-		};
-		fetchTodos();
+		const todosRef = ref(db, 'todos/');
+		onValue(todosRef, (snapshot) => {
+			const data = snapshot.val();
+			const todosArray = data
+				? Object.entries(data).map(([id, value]) => ({ id, ...value }))
+				: [];
+			setTodos(todosArray);
+			setIsLoading(false);
+		});
 	}, []);
 
 	// Добавление нового дела
 	const addTodo = async () => {
-		const response = await axios.post('http://localhost:3005/todos', {
-			title: newTodo,
-		});
-		setTodos([...todos, response.data]);
+		const newTodoRef = ref(db, 'todos/' + Date.now());
+		await set(newTodoRef, { title: newTodo });
 		setNewTodo('');
 	};
 
 	// Удаление дела
 	const deleteTodo = async (id) => {
-		await axios.delete(`http://localhost:3005/todos/${id}`);
-		setTodos(todos.filter((todo) => todo.id !== id));
-		console.log(id);
+		await remove(ref(db, 'todos/' + id));
 	};
 
 	const filteredTodos = todos.filter((todo) => todo.title.includes(search));
 	const sortedTodos = isSort
 		? [...filteredTodos].sort((a, b) => a.title.localeCompare(b.title))
 		: filteredTodos;
-
 	return (
 		<div className={s.container}>
 			<div className={s.header}>
 				<h1>Список дел</h1>
 			</div>
-
 			{isLoading ? (
 				<div className={s.loader}></div>
 			) : (
