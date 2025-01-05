@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { db } from './firebase';
+import { onValue, ref, set, remove, update } from 'firebase/database'; // Исправлено: updateDoc заменен на update
 import s from './style.module.css';
+
 export const App = () => {
 	const [todos, setTodos] = useState([]);
 	const [newTodo, setNewTodo] = useState('');
@@ -8,49 +10,44 @@ export const App = () => {
 	const [isSort, setIsSort] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 	const [editingTodo, setEditingTodo] = useState(null);
-	// Загрузка данных из JSON Server
+
 	useEffect(() => {
-		const fetchTodos = async () => {
-			try {
-				const response = await axios.get('http://localhost:3005/todos');
-				setTodos(response.data);
-			} catch (error) {
-				console.error('Ошибка при загрузке данных:', error);
-			} finally {
-				setIsLoading(false); // Устанавливаем isLoading в false после загрузки
-			}
-		};
-		fetchTodos();
+		const todosRef = ref(db, 'todos/');
+		onValue(todosRef, (snapshot) => {
+			const data = snapshot.val();
+			const todosArray = data
+				? Object.entries(data).map(([id, value]) => ({ id, ...value }))
+				: [];
+			setTodos(todosArray);
+			setIsLoading(false);
+		});
 	}, []);
+
+	const addTodo = async () => {
+		const newTodoRef = ref(db, 'todos/' + Date.now());
+		await set(newTodoRef, { title: newTodo });
+		setNewTodo('');
+	};
+
+	const deleteTodo = async (id) => {
+		await remove(ref(db, 'todos/' + id));
+	};
 
 	const startEditing = (todo) => {
 		setEditingTodo({ ...todo }); // Устанавливаем редактируемый todo
 	};
 
 	const saveTodo = async () => {
-		await axios.put(`http://localhost:3005/todos/${editingTodo.id}`, editingTodo);
+		await update(ref(db, 'todos/' + editingTodo.id), { title: editingTodo.title }); // Исправлено: updateDoc заменен на update
 		setTodos(todos.map((todo) => (todo.id === editingTodo.id ? editingTodo : todo)));
-		setEditingTodo(null); // Сбрасываем редактирование
+		setEditingTodo(null);
 	};
 
-	// Добавление нового дела
-	const addTodo = async () => {
-		const response = await axios.post('http://localhost:3005/todos', {
-			title: newTodo,
-		});
-		setTodos([...todos, response.data]);
-		setNewTodo('');
-	};
-	// Удаление дела
-	const deleteTodo = async (id) => {
-		await axios.delete(`http://localhost:3005/todos/${id}`);
-		setTodos(todos.filter((todo) => todo.id !== id));
-		console.log(id);
-	};
 	const filteredTodos = todos.filter((todo) => todo.title.includes(search));
 	const sortedTodos = isSort
 		? [...filteredTodos].sort((a, b) => a.title.localeCompare(b.title))
 		: filteredTodos;
+
 	return (
 		<div className={s.container}>
 			<div className={s.header}>
