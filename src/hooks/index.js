@@ -1,3 +1,3 @@
-export * from './useFirebase';
+export * from './useJsonServer';
 export * from './useEditTodo';
 export * from './useFilterAndSort';
