@@ -8,6 +8,11 @@ export const useEditTodo = () => {
 	};
 
 	const saveTodo = (updateTodo, editingTodo) => {
+		if (editingTodo.title.trim() === '') {
+			alert('Поле не может быть пустым');
+			return;
+		}
+
 		updateTodo(editingTodo.id, { title: editingTodo.title });
 		setEditingTodo(null);
 	};

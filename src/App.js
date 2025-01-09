@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
-import { useFirebase } from './hooks/useFirebase';
+import { useJsonServer } from './hooks/useJsonServer';
 import { useEditTodo } from './hooks/useEditTodo';
 import { useFilterAndSort } from './hooks/useFilterAndSort';
 import s from './style.module.css';
 
 export const App = () => {
 	const [newTodo, setNewTodo] = useState('');
-	const { todos, isLoading, addTodo, deleteTodo, updateTodo } = useFirebase();
+	const { todos, isLoading, addTodo, deleteTodo, updateTodo } = useJsonServer();
 	const { editingTodo, startEditing, setEditingTodo, saveTodo } = useEditTodo();
 	const { search, setSearch, isSort, setIsSort, sortedTodos } = useFilterAndSort(todos);
 
 	const handleAddTodo = async () => {
+		if (newTodo.trim() === '') {
+			alert('Поле не может быть пустым');
+			return;
+		}
 		await addTodo(newTodo);
 		setNewTodo('');
 	};
