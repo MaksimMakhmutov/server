@@ -1,52 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { db } from './firebase';
-import { onValue, ref, set, remove, update } from 'firebase/database'; // Исправлено: updateDoc заменен на update
+import React, { useState } from 'react';
+import { useFirebase } from './hooks/useFirebase';
+import { useEditTodo } from './hooks/useEditTodo';
+import { useFilterAndSort } from './hooks/useFilterAndSort';
 import s from './style.module.css';
 
 export const App = () => {
-	const [todos, setTodos] = useState([]);
 	const [newTodo, setNewTodo] = useState('');
-	const [search, setSearch] = useState('');
-	const [isSort, setIsSort] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
-	const [editingTodo, setEditingTodo] = useState(null);
+	const { todos, isLoading, addTodo, deleteTodo, updateTodo } = useFirebase();
+	const { editingTodo, startEditing, setEditingTodo, saveTodo } = useEditTodo();
+	const { search, setSearch, isSort, setIsSort, sortedTodos } = useFilterAndSort(todos);
 
-	useEffect(() => {
-		const todosRef = ref(db, 'todos/');
-		onValue(todosRef, (snapshot) => {
-			const data = snapshot.val();
-			const todosArray = data
-				? Object.entries(data).map(([id, value]) => ({ id, ...value }))
-				: [];
-			setTodos(todosArray);
-			setIsLoading(false);
-		});
-	}, []);
-
-	const addTodo = async () => {
-		const newTodoRef = ref(db, 'todos/' + Date.now());
-		await set(newTodoRef, { title: newTodo });
+	const handleAddTodo = async () => {
+		await addTodo(newTodo);
 		setNewTodo('');
 	};
 
-	const deleteTodo = async (id) => {
-		await remove(ref(db, 'todos/' + id));
+	const handleSaveTodo = async () => {
+		await saveTodo(updateTodo, editingTodo);
 	};
-
-	const startEditing = (todo) => {
-		setEditingTodo({ ...todo }); // Устанавливаем редактируемый todo
-	};
-
-	const saveTodo = async () => {
-		await update(ref(db, 'todos/' + editingTodo.id), { title: editingTodo.title }); // Исправлено: updateDoc заменен на update
-		setTodos(todos.map((todo) => (todo.id === editingTodo.id ? editingTodo : todo)));
-		setEditingTodo(null);
-	};
-
-	const filteredTodos = todos.filter((todo) => todo.title.includes(search));
-	const sortedTodos = isSort
-		? [...filteredTodos].sort((a, b) => a.title.localeCompare(b.title))
-		: filteredTodos;
 
 	return (
 		<div className={s.container}>
@@ -63,7 +34,7 @@ export const App = () => {
 						placeholder="Напишите дело"
 						onChange={(e) => setNewTodo(e.target.value)}
 					/>
-					<button className={s.btn} onClick={addTodo}>
+					<button className={s.btn} onClick={handleAddTodo}>
 						Добавить
 					</button>
 					<input
@@ -99,7 +70,10 @@ export const App = () => {
 										Удалить
 									</button>
 									{editingTodo?.id === todo.id ? (
-										<button className={s.btn} onClick={saveTodo}>
+										<button
+											className={s.btn}
+											onClick={handleSaveTodo}
+										>
 											Сохранить
 										</button>
 									) : (
