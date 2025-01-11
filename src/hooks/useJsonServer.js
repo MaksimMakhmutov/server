@@ -1,48 +1,26 @@
 import { useState, useEffect } from 'react';
 
-export const useJsonServer = () => {
-	const [todos, setTodos] = useState([]);
+export const useJsonServer = (setTodos) => {
 	const [isLoading, setIsLoading] = useState(true);
+
+	const LoadingTime = 10;
 
 	useEffect(() => {
 		fetch('http://localhost:3001/todos')
-			.then((response) => response.json())
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+				return response.json();
+			})
 			.then((data) => {
 				setTodos(data);
+				setTimeout(() => setIsLoading(false), LoadingTime);
+			})
+			.catch((error) => {
+				console.error('There was a problem with the fetch operation:', error);
 				setIsLoading(false);
 			});
-	}, []);
-
-	const addTodo = async (newTodo) => {
-		const response = await fetch('http://localhost:3001/todos', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ title: newTodo }),
-		});
-		const data = await response.json();
-		setTodos((prevTodos) => [...prevTodos, data]);
-	};
-
-	const deleteTodo = async (id) => {
-		await fetch(`http://localhost:3001/todos/${id}`, {
-			method: 'DELETE',
-		});
-		setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
-	};
-
-	const updateTodo = async (id, updatedTodo) => {
-		const response = await fetch(`http://localhost:3001/todos/${id}`, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(updatedTodo),
-		});
-		const data = await response.json();
-		setTodos((prevTodos) => prevTodos.map((todo) => (todo.id === id ? data : todo)));
-	};
-
-	return { todos, isLoading, addTodo, deleteTodo, updateTodo };
+	}, [setTodos]);
+	return { isLoading };
 };

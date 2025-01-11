@@ -3,19 +3,16 @@ import { useState } from 'react';
 export const useEditTodo = () => {
 	const [editingTodo, setEditingTodo] = useState(null);
 
-	const startEditing = (todo) => {
-		setEditingTodo({ ...todo });
-	};
+	const startEditing = (todo) => setEditingTodo({ ...todo });
 
-	const saveTodo = (updateTodo, editingTodo) => {
-		if (editingTodo.title.trim() === '') {
+	const saveTodo = (updateTodo) => {
+		if (!editingTodo || editingTodo.title.trim() === '') {
 			alert('Поле не может быть пустым');
 			return;
 		}
-
 		updateTodo(editingTodo.id, { title: editingTodo.title });
 		setEditingTodo(null);
 	};
 
-	return { editingTodo, setEditingTodo, startEditing, saveTodo };
+	return { editingTodo, startEditing, saveTodo, setEditingTodo };
 };
