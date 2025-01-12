@@ -1,4 +1,5 @@
-import s from './styles.module.css';
+import { TodoInputField } from './TodoInputField';
+import { SearchAndSort } from './SearchAndSort';
 
 export const TodoInput = ({
 	newTodo,
@@ -10,23 +11,16 @@ export const TodoInput = ({
 	setIsSort,
 }) => (
 	<div>
-		<input
-			value={newTodo}
-			className={s.inp}
-			placeholder="Напишите дело"
-			onChange={(e) => setNewTodo(e.target.value)}
+		<TodoInputField
+			newTodo={newTodo}
+			setNewTodo={setNewTodo}
+			handleAddTodo={handleAddTodo}
 		/>
-		<button className={s.btn} onClick={handleAddTodo}>
-			Добавить
-		</button>
-		<input
-			className={s.inp}
-			value={search}
-			onChange={(e) => setSearch(e.target.value)}
-			placeholder="Поиск..."
+		<SearchAndSort
+			search={search}
+			setSearch={setSearch}
+			isSort={isSort}
+			setIsSort={setIsSort}
 		/>
-		<button className={s.btn} onClick={() => setIsSort(!isSort)}>
-			Сортировать
-		</button>
 	</div>
 );

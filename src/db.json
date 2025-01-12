@@ -1,12 +1,3 @@
 {
-  "todos": [
-    {
-      "title": "Разобраться с requestUpdateTodo",
-      "id": "4947"
-    },
-    {
-      "title": "777",
-      "id": "1c9f"
-    }
-  ]
+  "todos": []
 }
