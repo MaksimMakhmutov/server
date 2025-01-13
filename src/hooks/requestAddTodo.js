@@ -1,4 +1,4 @@
-export const requestAddTodo = async (newTodo, setTodos) => {
+export const requestAddTodo = async (newTodo) => {
 	const response = await fetch('http://localhost:3001/todos', {
 		method: 'POST',
 		headers: {
@@ -6,6 +6,7 @@ export const requestAddTodo = async (newTodo, setTodos) => {
 		},
 		body: JSON.stringify({ title: newTodo }),
 	});
-	const data = await response.json();
-	setTodos((prevTodos) => [...prevTodos, data]);
+
+	if (!response.ok) throw new Error('Не удалось добавить задачу');
+	return response.json();
 };

@@ -1,18 +1,12 @@
-export const requestUpdateTodo = async (updatedTodo, setTodos) => {
-	try {
-		const response = await fetch(`http://localhost:3001/todos/${updatedTodo.id}`, {
-			method: 'PUT',
-			body: JSON.stringify(updatedTodo),
-			headers: { 'Content-Type': 'application/json' },
-		});
+export const requestUpdateTodo = async (updatedTodo) => {
+	const response = await fetch(`http://localhost:3001/todos/${updatedTodo.id}`, {
+		method: 'PUT',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(updatedTodo),
+	});
 
-		if (!response.ok) throw new Error('Ошибка обновления');
-		const data = await response.json();
-		setTodos((prevTodos) =>
-			prevTodos.map((todo) => (todo.id === updatedTodo.id ? data : todo)),
-		);
-	} catch (error) {
-		console.error(error);
-		alert('Не удалось обновить задачу');
-	}
+	if (!response.ok) throw new Error('Не удалось обновить задачу');
+	return response.json();
 };

@@ -1,6 +1,5 @@
-export const requestDeleteTodo = async (id, setTodos) => {
+export const requestDeleteTodo = async (id) => {
 	await fetch(`http://localhost:3001/todos/${id}`, {
 		method: 'DELETE',
 	});
-	setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
 };

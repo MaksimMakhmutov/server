@@ -7,7 +7,7 @@ export const useFilterAndSort = (todos) => {
 	const filteredTodos = todos.filter((todo) => todo.title.includes(search));
 	const sortedTodos = isSort
 		? [...filteredTodos].sort((a, b) => a.title.localeCompare(b.title))
-		: filteredTodos;
+		: [...filteredTodos];
 
 	return { search, setSearch, isSort, setIsSort, sortedTodos };
 };
