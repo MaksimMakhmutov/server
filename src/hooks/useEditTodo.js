@@ -1,9 +1,9 @@
-// import { useState } from 'react';
+import { useState } from 'react';
 
-// export const useEditTodo = () => {
-// 	const [editingTodo, setEditingTodo] = useState(null);
+export const useEditTodo = () => {
+	const [editingTodo, setEditingTodo] = useState(null);
 
-// 	const startEditing = (todo) => setEditingTodo({ ...todo });
+	const startEditing = (todo) => setEditingTodo({ ...todo });
 
-// 	return { editingTodo, startEditing, setEditingTodo };
-// };
+	return { editingTodo, startEditing, setEditingTodo };
+};

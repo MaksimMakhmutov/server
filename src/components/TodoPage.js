@@ -37,6 +37,7 @@ export const TodoPage = () => {
 		}
 		await requestUpdateTodo({ ...todo, title });
 		setIsEditing(false);
+		navigate(-1);
 	};
 
 	return (
