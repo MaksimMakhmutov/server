@@ -5,6 +5,7 @@
 /React-router.git
 /.pnp
 .pnp.js
+/environments
 
 # testing
 /coverage
