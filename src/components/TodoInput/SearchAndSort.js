@@ -1,5 +1,8 @@
+import { useTodo } from '../../context/AppContext';
 import s from './styles.module.css';
-export const SearchAndSort = ({ search, setSearch, isSort, setIsSort }) => {
+
+export const SearchAndSort = () => {
+	const { search, setSearch, isSort, setIsSort } = useTodo();
 	return (
 		<div>
 			<input
@@ -7,7 +10,7 @@ export const SearchAndSort = ({ search, setSearch, isSort, setIsSort }) => {
 				type="text"
 				value={search}
 				onChange={(e) => setSearch(e.target.value)}
-				placeholder="Поиск..."
+				placeholder="Поиск…"
 			/>
 			<button className={s.btn} onClick={() => setIsSort(!isSort)}>
 				{isSort ? 'Отменить сортировку' : 'Сортировать'}

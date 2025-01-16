@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { requestDeleteTodo, requestUpdateTodo } from '../hooks';
+import { requestDeleteTodo, requestUpdateTodo } from '../../hooks';
 import s from './styles.module.css';
 
 export const TodoPage = () => {
