@@ -1,26 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { FieldLayout, InformationLayout } from './GameLayout/index';
 import s from './styles.module.css';
-import store from './store/store';
+
+import { useSelector, useDispatch } from 'react-redux';
 
 export const App = () => {
-	const [state, setState] = useState(store.getState());
+	return <Game />;
+};
 
-	useEffect(() => {
-		const unsubscribe = store.subscribe(() => {
-			setState(store.getState());
-		});
-
-		return () => unsubscribe();
-	}, []);
+const Game = () => {
+	const dispatch = useDispatch();
+	const state = useSelector((state) => state);
 
 	const handleCellClick = (index) => {
 		if (state.field[index] || state.isGameEnded) return;
-		store.dispatch({ type: 'MAKE_MOVE', index });
+		dispatch({ type: 'MAKE_MOVE', index });
 	};
 
 	const resetGame = () => {
-		store.dispatch({ type: 'RESET_GAME' });
+		dispatch({ type: 'RESET_GAME' });
 	};
 
 	return (

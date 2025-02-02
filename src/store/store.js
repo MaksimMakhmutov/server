@@ -1,6 +1,4 @@
 import { createStore } from './createStore';
 import { gameReducer } from './reducer';
 
-const store = createStore(gameReducer);
-
-export default store;
+export const store = createStore(gameReducer);
