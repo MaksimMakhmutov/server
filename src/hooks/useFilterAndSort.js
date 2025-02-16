@@ -11,3 +11,4 @@ export const useFilterAndSort = (todos) => {
 
 	return { search, setSearch, isSort, setIsSort, sortedTodos };
 };
+
