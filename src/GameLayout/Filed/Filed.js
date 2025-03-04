@@ -1,28 +1,43 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 class FieldLayout extends React.Component {
+	handleClick = (index) => {
+		const { field, makeMove, isGameEnded } = this.props;
+		if (isGameEnded || field[index]) return;
+
+		makeMove(index);
+	};
+
 	render() {
-		const { field, onCellClick } = this.props;
+		const { field } = this.props;
+
 		return (
-			<div class="grid grid-cols-3 grid-rows-3 gap-0">
+			<div class="grid grid-cols-3 gap-4">
 				{field.map((cell, index) => (
-					<button
+					<div
 						key={index}
+						onClick={() => this.handleClick(index)}
 						class="w-[75px] h-[75px] bg-white border-2 border-black flex justify-center items-center text-4xl cursor-pointer transition-colors duration-300 ease-in-out"
-						onClick={() => onCellClick(index)}
 					>
 						{cell}
-					</button>
+					</div>
 				))}
 			</div>
 		);
 	}
 }
 
-FieldLayout.propTypes = {
-	field: PropTypes.array.isRequired,
-	onCellClick: PropTypes.func.isRequired,
-};
+const mapStateToPropsField = (state) => ({
+	field: state.field,
+	isGameEnded: state.isGameEnded,
+});
 
-export { FieldLayout };
+const mapDispatchToPropsField = (dispatch) => ({
+	makeMove: (index) => dispatch({ type: 'MAKE_MOVE', index }),
+});
+
+export const ConnectedFieldLayout = connect(
+	mapStateToPropsField,
+	mapDispatchToPropsField,
+)(FieldLayout);

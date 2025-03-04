@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 class InformationLayout extends React.Component {
 	render() {
@@ -9,14 +9,17 @@ class InformationLayout extends React.Component {
 			: isGameEnded
 				? `Победа ${currentPlayer}`
 				: `Ход ${currentPlayer}`;
-		return <div className="text-xl mb-4">{message}</div>;
+
+		return <div class="text-xl mb-4">{message}</div>;
 	}
 }
 
-InformationLayout.propTypes = {
-	currentPlayer: PropTypes.string.isRequired,
-	isGameEnded: PropTypes.bool.isRequired,
-	isDraw: PropTypes.bool.isRequired,
-};
+const mapStateToPropsInformation = (state) => ({
+	currentPlayer: state.currentPlayer,
+	isGameEnded: state.isGameEnded,
+	isDraw: state.isDraw,
+});
 
-export { InformationLayout };
+export const ConnectedInformationLayout = connect(mapStateToPropsInformation)(
+	InformationLayout,
+);

@@ -1,32 +1,20 @@
 import React from 'react';
-import { FieldLayout, InformationLayout } from './GameLayout/index';
 import { connect } from 'react-redux';
-
-class App extends React.Component {
-	render() {
-		return <Game {...this.props} />;
-	}
-}
+import { ConnectedInformationLayout, ConnectedFieldLayout } from './GameLayout';
 
 class Game extends React.Component {
-	handleCellClick = (index) => {
-		if (this.props.field[index] || this.props.isGameEnded) return;
-		this.props.makeMove(index);
-	};
 	resetGame = () => {
 		this.props.resetGame();
 	};
+
 	render() {
-		const { currentPlayer, isGameEnded, isDraw, field } = this.props;
+		const { isGameEnded, isDraw } = this.props;
+
 		return (
 			<div>
-				<InformationLayout
-					currentPlayer={currentPlayer}
-					isGameEnded={isGameEnded}
-					isDraw={isDraw}
-				/>
-				<FieldLayout field={field} onCellClick={this.handleCellClick} />
-				{(isDraw || isGameEnded) && (
+				<ConnectedInformationLayout />
+				<ConnectedFieldLayout />
+				{(isGameEnded || isDraw) && (
 					<button
 						className="px-5 py-2 mt-4 text-white bg-gray-800 border-none rounded-md cursor-pointer transition-colors hover:bg-gray-600"
 						onClick={this.resetGame}
@@ -39,21 +27,17 @@ class Game extends React.Component {
 	}
 }
 
-const mapStateToProps = (state) => {
-	return {
-		field: state.field,
-		currentPlayer: state.currentPlayer,
-		isGameEnded: state.isGameEnded,
-		isDraw: state.isDraw,
-	};
-};
+const mapStateToProps = (state) => ({
+	isGameEnded: state.isGameEnded,
+	isDraw: state.isDraw,
+});
 
-const mapDispatchToProps = (dispatch) => {
-	return {
-		makeMove: (index) => dispatch({ type: 'MAKE_MOVE', index }),
-		resetGame: () => dispatch({ type: 'RESET_GAME' }),
-	};
-};
+const mapDispatchToProps = (dispatch) => ({
+	resetGame: () => dispatch({ type: 'RESET_GAME' }),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
-//123
+const ConnectedGame = connect(mapStateToProps, mapDispatchToProps)(Game);
+
+const App = () => <ConnectedGame />;
+
+export default App;
