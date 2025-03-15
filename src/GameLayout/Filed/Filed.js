@@ -4,7 +4,6 @@ import { store } from '../../store/store';
 
 export const FieldLayout = () => {
 	const state = store.getState();
-	
 	const handleCellClick = (index) => {
 		if (state.field[index] || state.isGameEnded) return;
 		store.dispatch({ type: 'MAKE_MOVE', index });

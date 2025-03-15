@@ -1,32 +1,59 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FieldLayout, InformationLayout } from './GameLayout/index';
-import s from './styels.module.css';
-import { store } from './store/store';
+import { connect } from 'react-redux';
 
-export const App = () => {
-	const [state, setState] = useState(store.getState());
+class App extends React.Component {
+	render() {
+		return <Game {...this.props} />;
+	}
+}
 
-	useEffect(() => {
-		const unsubscribe = store.subscribe(() => {
-			setState(store.getState());
-		});
-
-		return () => unsubscribe();
-	}, []);
-
-	const resetGame = () => {
-		store.dispatch({ type: 'RESET_GAME' });
+class Game extends React.Component {
+	handleCellClick = (index) => {
+		if (this.props.field[index] || this.props.isGameEnded) return;
+		this.props.makeMove(index);
 	};
+	resetGame = () => {
+		this.props.resetGame();
+	};
+	render() {
+		const { currentPlayer, isGameEnded, isDraw, field } = this.props;
+		return (
+			<div>
+				<InformationLayout
+					currentPlayer={currentPlayer}
+					isGameEnded={isGameEnded}
+					isDraw={isDraw}
+				/>
+				<FieldLayout field={field} onCellClick={this.handleCellClick} />
+				{(isDraw || isGameEnded) && (
+					<button
+						className="px-5 py-2 mt-4 text-white bg-gray-800 border-none rounded-md cursor-pointer transition-colors hover:bg-gray-600"
+						onClick={this.resetGame}
+					>
+						Начать заново
+					</button>
+				)}
+			</div>
+		);
+	}
+}
 
-	return (
-		<div className={s.game}>
-			<InformationLayout />
-			<FieldLayout />
-			{state.isDraw || state.isGameEnded ? (
-				<button className={s.resetButton} onClick={resetGame}>
-					Начать заново
-				</button>
-			) : null}
-		</div>
-	);
+const mapStateToProps = (state) => {
+	return {
+		field: state.field,
+		currentPlayer: state.currentPlayer,
+		isGameEnded: state.isGameEnded,
+		isDraw: state.isDraw,
+	};
 };
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		makeMove: (index) => dispatch({ type: 'MAKE_MOVE', index }),
+		resetGame: () => dispatch({ type: 'RESET_GAME' }),
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+//123
